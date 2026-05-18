@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoidGarden — Mobile Games Studio</title>
+<meta name="description" content="VoidGarden is an independent mobile game studio crafting games that are impossible to put down.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07050F; --bg2: #0F0A1E; --cyan: #00FFFF;
+    --orange: #FF6B35; --white: #F0EEF8;
+    --muted: rgba(240,238,248,0.4);
+    --card: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.06);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--white); font-family: 'Syne', sans-serif; overflow-x: hidden; cursor: none; }
+  .cursor { width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: screen; }
+  .cursor-ring { width: 32px; height: 32px; border: 1px solid rgba(0,255,255,0.4); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transition: all 0.15s ease; transform: translate(-12px,-12px); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: border-color 0.3s, background 0.3s; }
+  nav.scrolled { background: rgba(7,5,15,0.9); backdrop-filter: blur(20px); border-color: var(--border); }
+  .nav-logo { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.1em; color: var(--white); text-decoration: none; }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a { font-size: 13px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; font-family: 'Space Mono', monospace; }
+  .nav-links a:hover { color: var(--white); }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 48px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,255,255,0.04) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 20% 80%, rgba(255,107,53,0.06) 0%, transparent 60%); }
+  .stars { position: absolute; inset: 0; overflow: hidden; }
+  .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; animation: twinkle var(--d) ease-in-out infinite; opacity: 0; }
+  @keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: var(--o); } }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.3em; color: var(--cyan); text-transform: uppercase; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s; }
+  .hero-title { font-size: clamp(56px, 10vw, 120px); font-weight: 800; line-height: 0.9; letter-spacing: -0.03em; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s; }
+  .hero-title .line2 { color: transparent; -webkit-text-stroke: 1px rgba(240,238,248,0.3); }
+  .hero-title .accent { color: var(--cyan); }
+  .hero-sub { font-size: 18px; color: var(--muted); line-height: 1.6; max-width: 480px; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s; font-weight: 400; }
+  .hero-cta { display: flex; gap: 16px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s; }
+  .btn-primary { padding: 14px 32px; background: var(--cyan); color: var(--bg); font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; font-weight: 700; cursor: none; transition: transform 0.2s, box-shadow 0.2s; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,255,255,0.3); }
+  .btn-ghost { padding: 14px 32px; background: transparent; color: var(--white); font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--border); cursor: none; transition: border-color 0.2s, color 0.2s; }
+  .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+  .scroll-indicator { position: absolute; bottom: 48px; left: 48px; display: flex; align-items: center; gap: 12px; opacity: 0; animation: fadeUp 0.8s ease forwards 1.2s; }
+  .scroll-line { width: 40px; height: 1px; background: var(--muted); position: relative; overflow: hidden; }
+  .scroll-line::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: var(--cyan); animation: scanline 2s ease-in-out infinite; }
+  @keyframes scanline { 0% { left: -100%; } 100% { left: 100%; } }
+  .scroll-text { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+  .games { padding: 120px 48px; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.3em; color: var(--cyan); text-transform: uppercase; margin-bottom: 16px; }
+  .section-title { font-size: clamp(32px, 5vw, 56px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 64px; line-height: 1; }
+  .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2px; }
+  .game-card { background: var(--card); border: 1px solid var(--border); padding: 48px; position: relative; overflow: hidden; transition: border-color 0.3s; text-decoration: none; color: var(--white); display: block; min-height: 400px; }
+  .game-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 80% at 50% 0%, var(--card-glow, rgba(0,255,255,0.05)) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s; }
+  .game-card:hover { border-color: rgba(255,255,255,0.15); }
+  .game-card:hover::before { opacity: 1; }
+  .game-card.void-sprint { --card-glow: rgba(0,255,255,0.08); }
+  .game-card.sakura { --card-glow: rgba(255,183,197,0.08); }
+  .game-card.fling { --card-glow: rgba(0,255,255,0.06); }
+  .game-card.panda { --card-glow: rgba(100,200,100,0.08); }
+  .game-status { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 32px; display: inline-flex; align-items: center; gap: 8px; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .status-dot.live { background: #00FF88; animation: pulse-dot 2s ease-in-out infinite; }
+  .status-dot.building { background: var(--cyan); }
+  .status-dot.planned { background: rgba(240,238,248,0.3); }
+  @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.4); } 50% { box-shadow: 0 0 0 6px rgba(0,255,136,0); } }
+  .game-icon { font-size: 48px; margin-bottom: 24px; display: block; }
+  .game-name { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .game-genre { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+  .game-desc { font-size: 15px; color: var(--muted); line-height: 1.6; margin-bottom: 32px; font-weight: 400; }
+  .game-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; padding: 4px 10px; border: 1px solid var(--border); color: var(--muted); text-transform: uppercase; }
+  .game-card .arrow { position: absolute; bottom: 48px; right: 48px; width: 32px; height: 32px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; transition: border-color 0.2s, transform 0.2s; font-size: 14px; }
+  .game-card:hover .arrow { border-color: var(--cyan); color: var(--cyan); transform: translate(2px,-2px); }
+  .philosophy { padding: 120px 48px; border-top: 1px solid var(--border); text-align: center; max-width: 800px; margin: 0 auto; }
+  .philosophy-quote { font-size: clamp(24px, 4vw, 42px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 24px; }
+  .philosophy-quote .hl { color: var(--cyan); }
+  .philosophy-sub { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); letter-spacing: 0.05em; }
+  .about { padding: 120px 48px; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .about-text p { font-size: 17px; color: var(--muted); line-height: 1.8; margin-bottom: 24px; font-weight: 400; }
+  .about-text p strong { color: var(--white); font-weight: 700; }
+  .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .stat-box { background: var(--card); border: 1px solid var(--border); padding: 32px; }
+  .stat-num { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; color: var(--cyan); line-height: 1; margin-bottom: 8px; }
+  .stat-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  footer { padding: 48px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .footer-logo { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.1em; color: var(--white); }
+  .footer-logo span { color: var(--cyan); }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+  .footer-copy { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; } .nav-links { display: none; }
+    .hero, .games, .about, .philosophy { padding-left: 24px; padding-right: 24px; }
+    .hero-cta { flex-direction: column; }
+    .about { grid-template-columns: 1fr; gap: 48px; }
+    footer { padding: 32px 24px; flex-direction: column; gap: 24px; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">VOID<span>GARDEN</span></a>
+  <div class="nav-links">
+    <a href="#games">Games</a>
+    <a href="#about">Studio</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="stars" id="stars"></div>
+  <div class="hero-content">
+    <p class="hero-label">// Independent Game Studio</p>
+    <h1 class="hero-title">VOID<br><span class="line2">GAR<span class="accent">DEN</span></span></h1>
+    <p class="hero-sub">We build mobile games worth losing sleep over. From brutal skill-based arcade games to rich immersive worlds — every game is designed to be impossible to put down.</p>
+    <div class="hero-cta">
+      <a href="#games" class="btn-primary">See Our Games</a>
+      <a href="#about" class="btn-ghost">About Studio</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<section class="games" id="games">
+  <p class="section-label">// Portfolio</p>
+  <h2 class="section-title">Our Games</h2>
+  <div class="games-grid">
+
+    <a href="#" class="game-card void-sprint">
+      <div class="game-status"><div class="status-dot live"></div><span style="color:#00FF88;">Submitting Soon</span></div>
+      <span class="game-icon">⚡</span>
+      <h3 class="game-name">Void Sprint</h3>
+      <p class="game-genre">Endless Platformer</p>
+      <p class="game-desc">Jump between platforms as the void closes in. One tap. Pure timing. The harder you fall, the more you want one more run.</p>
+      <div class="game-tags"><span class="tag">Arcade</span><span class="tag">Endless</span><span class="tag">Platformer</span></div>
+      <div class="arrow">↗</div>
+    </a>
+
+    <a href="#" class="game-card sakura">
+      <div class="game-status"><div class="status-dot building"></div><span style="color:var(--cyan);">In Development</span></div>
+      <span class="game-icon">🌸</span>
+      <h3 class="game-name">Sakura Drop</h3>
+      <p class="game-genre">Helix Puzzle Game</p>
+      <p class="game-desc">A ball falls through a rotating cherry blossom tower. Tap to spin. Find the gap. Fall further than you ever thought possible.</p>
+      <div class="game-tags"><span class="tag">Puzzle</span><span class="tag">Helix</span><span class="tag">Japanese</span></div>
+      <div class="arrow">↗</div>
+    </a>
+
+    <a href="#" class="game-card fling">
+      <div class="game-status"><div class="status-dot building"></div><span style="color:var(--cyan);">In Development</span></div>
+      <span class="game-icon">🪐</span>
+      <h3 class="game-name">Fling</h3>
+      <p class="game-genre">Orbit & Drift Game</p>
+      <p class="game-desc">Your ball orbits a void planet. Tap to release and fling to the next. Miss and you drift into the void forever. One tap. Pure skill.</p>
+      <div class="game-tags"><span class="tag">Arcade</span><span class="tag">Orbit</span><span class="tag">Skill</span></div>
+      <div class="arrow">↗</div>
+    </a>
+
+    <a href="#" class="game-card panda">
+      <div class="game-status"><div class="status-dot planned"></div><span style="color:var(--muted);">Planned</span></div>
+      <span class="game-icon">🐼</span>
+      <h3 class="game-name">Panda Monk</h3>
+      <p class="game-genre">Endless Runner</p>
+      <p class="game-desc">A panda monk runs through ancient bamboo forests and misty mountains. Jump, dodge, survive. Beautiful, brutal, endlessly replayable.</p>
+      <div class="game-tags"><span class="tag">Runner</span><span class="tag">Adventure</span><span class="tag">Planned</span></div>
+      <div class="arrow">↗</div>
+    </a>
+
+  </div>
+</section>
+
+<section class="philosophy">
+  <p class="section-label">// Philosophy</p>
+  <h2 class="philosophy-quote">Games worth <span class="hl">losing sleep over.</span></h2>
+  <p class="philosophy-sub">Every genre. Every mechanic. One standard — impossible to put down.</p>
+</section>
+
+<section class="about" id="about">
+  <div class="about-text">
+    <p class="section-label">// Studio</p>
+    <h2 class="section-title" style="margin-bottom:32px;">Small studio.<br>Big games.</h2>
+    <p>VoidGarden is an <strong>independent studio</strong> building mobile games across every genre — from brutal skill-based arcade games to rich immersive experiences.</p>
+    <p>We believe the best games are the ones that <strong>hook you in 5 seconds</strong> and keep you coming back for years. Every title we ship is held to that standard.</p>
+    <p style="margin-bottom:0;">We move fast, iterate constantly, and never ship something we wouldn't play ourselves.</p>
+    <br>
+    <a href="contact.html" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--cyan);text-decoration:none;letter-spacing:0.1em;">Get in touch ↗</a>
+  </div>
+  <div class="about-stats">
+    <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Games in Dev</div></div>
+    <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Genres</div></div>
+    <div class="stat-box"><div class="stat-num">0</div><div class="stat-label">Compromises</div></div>
+    <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Replayability</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">VOID<span>GARDEN</span></div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="contact.html">Contact</a>
+    <a href="#games">Games</a>
+  </div>
+  <div class="footer-copy">© 2026 VoidGarden</div>
+</footer>
+
+<script>
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-4+'px';cursor.style.top=my-4+'px';});
+  function animateRing(){rx+=(mx-rx-16)*0.12;ry+=(my-ry-16)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing);}
+  animateRing();
+  window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50));
+  const starsEl=document.getElementById('stars');
+  for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.setProperty('--d',(2+Math.random()*4)+'s');s.style.setProperty('--o',(0.2+Math.random()*0.6).toString());s.style.animationDelay=Math.random()*4+'s';starsEl.appendChild(s);}
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2)';ring.style.transform='translate(-12px,-12px) scale(1.5)';ring.style.borderColor='rgba(0,255,255,0.8)';});
+    el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';ring.style.transform='translate(-12px,-12px) scale(1)';ring.style.borderColor='rgba(0,255,255,0.4)';});
+  });
+</script>
+</body>
+</html>
