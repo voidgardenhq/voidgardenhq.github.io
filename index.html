@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoidGarden — Where the Garden Meets the Void</title>
+<meta name="description" content="VoidGarden is an independent mobile game studio. Ancient beauty. Eternal shadow. Games worth losing sleep over.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Shadowlands base */
+    --bg-deep:    #05080F;
+    --bg-mid:     #0A0E1A;
+    --bg-surface: #0F1520;
+    --bg-card:    #0D1220;
+
+    /* MoP jade warmth bleeding through */
+    --jade:       #5BA88A;
+    --jade-dim:   rgba(91,168,138,0.12);
+    --jade-glow:  rgba(91,168,138,0.06);
+
+    /* WoW gold — used sparingly, ornate */
+    --gold:       #C8A84B;
+    --gold-bright:#E8C96A;
+    --gold-dim:   rgba(200,168,75,0.15);
+    --gold-border:rgba(200,168,75,0.25);
+
+    /* Shadowlands anima — cold soul energy */
+    --anima:      #C8C0D8;
+    --anima-dim:  rgba(200,192,216,0.12);
+
+    /* Text — warm parchment */
+    --text-primary:  #F5E6C8;
+    --text-secondary:rgba(245,230,200,0.55);
+    --text-muted:    rgba(245,230,200,0.3);
+
+    /* Borders — thin gold frames like WoW UI */
+    --border:     rgba(200,168,75,0.18);
+    --border-hover:rgba(200,168,75,0.4);
+
+    /* Void shadow purple — deep, not neon */
+    --void-purple:#1A0D2E;
+    --shadow:     rgba(10,5,20,0.8);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Crimson Text', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Cursor */
+  .cursor {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  .cursor-ring {
+    width: 24px; height: 24px;
+    border: 1px solid rgba(200,168,75,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.12s ease;
+    transform: translate(-9px,-9px);
+  }
+
+  /* Deep void atmosphere */
+  .atmosphere {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%,   rgba(91,168,138,0.03) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 0%   60%,  rgba(26,13,46,0.6)   0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 100% 40%,  rgba(200,192,216,0.04) 0%, transparent 60%);
+  }
+
+  /* Stars — cold Shadowlands blue-white */
+  .stars { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .star {
+    position: absolute; border-radius: 50%;
+    animation: starPulse var(--d) ease-in-out infinite var(--delay);
+    opacity: 0;
+  }
+  @keyframes starPulse {
+    0%,100% { opacity: 0; }
+    50%      { opacity: var(--o); }
+  }
+
+  /* Floating mist particles */
+  .mist-particle {
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(91,168,138,0.08);
+    pointer-events: none;
+    z-index: 0;
+    animation: mistFloat linear infinite;
+  }
+  @keyframes mistFloat {
+    0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 0.6; }
+    100% { transform: translateY(-80px) translateX(20px) scale(1.3); opacity: 0; }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid transparent;
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(5,8,15,0.96);
+    backdrop-filter: blur(20px);
+    border-color: var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .logo-void   { color: var(--anima); }
+  .logo-garden { color: var(--jade); }
+
+  .nav-links { display: flex; gap: 36px; align-items: center; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 56px;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  /* Gold decorative line — WoW frame feel */
+  .hero-line {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right,
+      transparent,
+      var(--gold-dim),
+      var(--gold),
+      var(--gold-dim),
+      transparent);
+    opacity: 0.6;
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+  .hero-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--jade);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: appear 1s ease forwards 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hero-kicker::before,
+  .hero-kicker::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--jade));
+    opacity: 0.5;
+  }
+  .hero-kicker::before { width: 28px; }
+  .hero-kicker::after  { width: 28px; background: linear-gradient(to left, transparent, var(--jade)); }
+
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(52px, 9vw, 108px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    opacity: 0;
+    animation: appear 1s ease forwards 0.5s;
+  }
+  .hero-title .t-void   { color: var(--anima); display: block; }
+  .hero-title .t-garden {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(91,168,138,0.6);
+    display: block;
+  }
+
+  .hero-ornament {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: appear 1s ease forwards 0.65s;
+  }
+  .hero-ornament .line {
+    height: 1px;
+    width: 60px;
+    background: linear-gradient(to right, var(--gold-dim), var(--gold));
+    opacity: 0.5;
+  }
+  .hero-ornament .tagline {
+    font-family: 'Crimson Text', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+  }
+
+  .hero-sub {
+    font-size: 19px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: appear 1s ease forwards 0.8s;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    opacity: 0;
+    animation: appear 1s ease forwards 1s;
+  }
+
+  .btn-gold {
+    padding: 12px 32px;
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--gold-border);
+    cursor: none;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold-dim);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .btn-gold:hover { border-color: var(--gold); color: var(--gold-bright); }
+  .btn-gold:hover::before { transform: scaleX(1); }
+  .btn-gold span { position: relative; z-index: 1; }
+
+  .btn-ghost {
+    padding: 12px 32px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(245,230,200,0.1);
+    cursor: none;
+    transition: all 0.25s;
+  }
+  .btn-ghost:hover { border-color: rgba(245,230,200,0.25); color: var(--text-primary); }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px; left: 56px;
+    display: flex; align-items: center; gap: 14px;
+    opacity: 0;
+    animation: appear 1s ease forwards 1.4s;
+  }
+  .scroll-pip {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0.5;
+    animation: pipGlow 2s ease-in-out infinite;
+  }
+  @keyframes pipGlow {
+    0%,100% { opacity: 0.3; }
+    50%      { opacity: 0.8; }
+  }
+  .scroll-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+  }
+
+  /* SECTION SHARED */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(to right,
+      transparent,
+      var(--gold-dim),
+      rgba(200,168,75,0.35),
+      var(--gold-dim),
+      transparent);
+    margin: 0 56px;
+    position: relative; z-index: 2;
+  }
+  .gold-divider::before,
+  .gold-divider::after {
+    content: '✦';
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 8px;
+    opacity: 0.5;
+  }
+  .gold-divider::before { left: 56px; }
+  .gold-divider::after  { right: 56px; }
+
+  .section-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: var(--jade);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .section-heading {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(26px, 4vw, 44px);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    margin-bottom: 56px;
+    line-height: 1.1;
+  }
+  .section-heading .gold-word { color: var(--gold); }
+  .section-heading .jade-word { color: var(--jade); }
+
+  /* GAMES */
+  .games {
+    padding: 96px 56px;
+    position: relative; z-index: 2;
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .game-card {
+    background: var(--bg-card);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text-primary);
+    display: block;
+    min-height: 360px;
+    transition: background 0.3s;
+  }
+  .game-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right,
+      transparent,
+      var(--card-accent, var(--gold-dim)),
+      transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .game-card:hover { background: #10172A; }
+  .game-card:hover::before { opacity: 1; }
+
+  .game-card.shadow-b  { --card-accent: rgba(91,168,138,0.4); }
+  .game-card.void-s    { --card-accent: rgba(200,192,216,0.4); }
+  .game-card.sakura    { --card-accent: rgba(200,168,75,0.4); }
+  .game-card.fling-c   { --card-accent: rgba(91,168,138,0.3); }
+  .game-card.panda-c   { --card-accent: rgba(200,168,75,0.3); }
+
+  .game-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+  }
+  .dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+  }
+  .dot.live    { background: var(--jade); animation: dotPulse 2s ease-in-out infinite; }
+  .dot.dev     { background: var(--anima); }
+  .dot.planned { background: rgba(245,230,200,0.2); }
+  @keyframes dotPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(91,168,138,0.5); }
+    50%      { box-shadow: 0 0 0 4px rgba(91,168,138,0); }
+  }
+
+  .game-icon { font-size: 40px; margin-bottom: 18px; display: block; line-height: 1; }
+  .game-name {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+  }
+  .game-genre {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--jade);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .game-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .game-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .tag.gold  { border-color: rgba(200,168,75,0.3);  color: var(--gold); }
+  .tag.jade  { border-color: rgba(91,168,138,0.3);  color: var(--jade); }
+  .tag.anima { border-color: rgba(200,192,216,0.3); color: var(--anima); }
+  .tag.mist  { border-color: rgba(245,230,200,0.15);color: var(--text-secondary); }
+
+  .card-arrow {
+    position: absolute;
+    bottom: 40px; right: 40px;
+    width: 24px; height: 24px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .game-card:hover .card-arrow {
+    border-color: var(--gold-border);
+    color: var(--gold);
+  }
+
+  /* PHILOSOPHY */
+  .philosophy {
+    padding: 96px 56px;
+    position: relative; z-index: 2;
+    text-align: center;
+  }
+  .philosophy-inner { max-width: 700px; margin: 0 auto; }
+
+  .philosophy-quote {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(20px, 3vw, 34px);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+  }
+  .philosophy-quote .gold-line { color: var(--gold); display: block; }
+  .philosophy-quote .jade-line { color: var(--jade); display: block; }
+  .philosophy-quote .anima-line { color: var(--anima); display: block; }
+
+  .philosophy-italic {
+    font-family: 'Crimson Text', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 52px;
+    letter-spacing: 0.04em;
+  }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .pillar {
+    background: var(--bg-card);
+    padding: 28px 20px;
+    text-align: center;
+  }
+  .pillar-symbol {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: block;
+    opacity: 0.7;
+  }
+  .pillar-word {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 96px 56px;
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 17px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 18px;
+    font-style: italic;
+  }
+  .about-text p strong {
+    color: var(--text-primary);
+    font-style: normal;
+    font-weight: 600;
+  }
+  .about-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--jade);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .about-link::after { content: '→'; transition: transform 0.2s; }
+  .about-link:hover { color: var(--gold); }
+  .about-link:hover::after { transform: translateX(4px); }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .stat {
+    background: var(--bg-card);
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, transparent, var(--s-color, var(--gold)), transparent);
+    opacity: 0.3;
+  }
+  .stat.s-jade  { --s-color: var(--jade); }
+  .stat.s-anima { --s-color: var(--anima); }
+  .stat.s-gold  { --s-color: var(--gold); }
+  .stat.s-mist  { --s-color: var(--text-secondary); }
+
+  .stat-num {
+    font-family: 'Cinzel', serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat.s-jade  .stat-num { color: var(--jade); }
+  .stat.s-anima .stat-num { color: var(--anima); }
+  .stat.s-gold  .stat-num { color: var(--gold); }
+  .stat.s-mist  .stat-num { color: var(--text-secondary); }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 36px 56px;
+    position: relative; z-index: 2;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+  .footer-logo .logo-void   { color: var(--anima); }
+  .footer-logo .logo-garden { color: var(--jade); }
+  .footer-tagline {
+    font-family: 'Crimson Text', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-top: 3px;
+  }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  @keyframes appear {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero, .games, .about, .philosophy { padding-left: 24px; padding-right: 24px; }
+    .gold-divider { margin: 0 24px; }
+    .hero-cta { flex-direction: column; }
+    .about { grid-template-columns: 1fr; gap: 48px; }
+    .pillars { grid-template-columns: 1fr; max-width: 280px; }
+    footer { padding: 28px 24px; flex-direction: column; gap: 20px; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="atmosphere"></div>
+<div class="stars" id="stars"></div>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <span class="logo-void">VOID</span><span class="logo-garden">GARDEN</span>
+  </a>
+  <div class="nav-links">
+    <a href="#games">Games</a>
+    <a href="#about">Studio</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-line"></div>
+  <div class="hero-content">
+    <p class="hero-kicker">Independent Game Studio</p>
+    <h1 class="hero-title">
+      <span class="t-void">VOID</span>
+      <span class="t-garden">GARDEN</span>
+    </h1>
+    <div class="hero-ornament">
+      <div class="line"></div>
+      <span class="tagline">Where the garden meets the void</span>
+      <div class="line" style="background:linear-gradient(to left,var(--gold-dim),var(--gold));"></div>
+    </div>
+    <p class="hero-sub">We build mobile games at the intersection of ancient beauty and eternal shadow. Every title carries both worlds — the warmth of jade mist and the depth of the void.</p>
+    <div class="hero-cta">
+      <a href="#games" class="btn-gold"><span>Explore Games</span></a>
+      <a href="#about" class="btn-ghost">Our Studio</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-pip"></div>
+    <span class="scroll-label">Scroll</span>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- GAMES -->
+<section class="games" id="games">
+  <p class="section-kicker">Portfolio</p>
+  <h2 class="section-heading">Our <span class="gold-word">Games</span></h2>
+
+  <div class="games-grid">
+
+    <a href="#" class="game-card shadow-b">
+      <div class="game-status"><div class="dot dev"></div>In Development</div>
+      <span class="game-icon">🌸</span>
+      <h3 class="game-name">Shadow Blossom</h3>
+      <p class="game-genre">Void Garden Flyer</p>
+      <p class="game-desc">Guide a shadow crane through an ancient jade garden consumed by void energy. Cherry blossoms drift into eternal shadow.</p>
+      <div class="game-tags">
+        <span class="tag jade">Ancient</span>
+        <span class="tag anima">Void</span>
+        <span class="tag mist">One Tap</span>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a href="#" class="game-card void-s">
+      <div class="game-status"><div class="dot live"></div><span style="color:var(--jade);">Submitting Soon</span></div>
+      <span class="game-icon">⚡</span>
+      <h3 class="game-name">Void Sprint</h3>
+      <p class="game-genre">Shadow Realm Platformer</p>
+      <p class="game-desc">Sprint through the Shadowlands. Jump between crumbling platforms as void energy consumes everything behind you.</p>
+      <div class="game-tags">
+        <span class="tag anima">Shadowlands</span>
+        <span class="tag mist">Endless</span>
+        <span class="tag mist">Platformer</span>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a href="#" class="game-card sakura">
+      <div class="game-status"><div class="dot dev"></div>In Development</div>
+      <span class="game-icon">🌸</span>
+      <h3 class="game-name">Sakura Drop</h3>
+      <p class="game-genre">Jade Temple Descent</p>
+      <p class="game-desc">A spirit falls through a rotating jade pagoda lost in the Pandarian mist. Tap to spin. Fall deeper into the ancient mystery.</p>
+      <div class="game-tags">
+        <span class="tag jade">Pandaria</span>
+        <span class="tag gold">Jade</span>
+        <span class="tag mist">Puzzle</span>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a href="#" class="game-card fling-c">
+      <div class="game-status"><div class="dot dev"></div>In Development</div>
+      <span class="game-icon">🪐</span>
+      <h3 class="game-name">Fling</h3>
+      <p class="game-genre">Void Realm Orbit</p>
+      <p class="game-desc">Your soul orbits a void realm fragment. Release and fling to the next. Miss and drift into the eternal dark between realms.</p>
+      <div class="game-tags">
+        <span class="tag anima">Void Realm</span>
+        <span class="tag mist">Orbit</span>
+        <span class="tag mist">Skill</span>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a href="#" class="game-card panda-c">
+      <div class="game-status"><div class="dot planned"></div>Planned</div>
+      <span class="game-icon">🐼</span>
+      <h3 class="game-name">Panda Monk</h3>
+      <p class="game-genre">Mists of Pandaria Runner</p>
+      <p class="game-desc">A panda monk races through misty bamboo forests as shadow corruption spreads from the Shadowlands. Ancient chi meets eternal void.</p>
+      <div class="game-tags">
+        <span class="tag gold">Pandaria</span>
+        <span class="tag anima">Shadow</span>
+        <span class="tag mist">Runner</span>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <div class="philosophy-inner">
+    <p class="section-kicker" style="justify-content:center;display:flex;align-items:center;gap:10px;">
+      <span style="display:block;width:20px;height:1px;background:var(--jade);opacity:0.5;"></span>
+      Our Creed
+      <span style="display:block;width:20px;height:1px;background:var(--jade);opacity:0.5;"></span>
+    </p>
+    <h2 class="philosophy-quote">
+      <span class="gold-line">Ancient beauty.</span>
+      <span class="jade-line">Eternal shadow.</span>
+      <span class="anima-line">One more run.</span>
+    </h2>
+    <p class="philosophy-italic">Where the mist of Pandaria meets the void of the Shadowlands — every game we build lives between both worlds.</p>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pillar-symbol">✦</span>
+        <div class="pillar-word">Beautiful</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-symbol">✦</span>
+        <div class="pillar-word">Unforgiving</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-symbol">✦</span>
+        <div class="pillar-word">Eternal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-text">
+    <p class="section-kicker">Studio</p>
+    <h2 class="section-heading" style="margin-bottom:28px;">Small studio.<br><span class="jade-word">Ancient vision.</span></h2>
+    <p>VoidGarden is an <strong>independent game studio</strong> building mobile games that exist at the crossroads of two worlds — the warm jade mist of ancient lands and the cold eternal shadow of the void.</p>
+    <p>Every game we make carries <strong>both</strong>. Peaceful yet deadly. Beautiful yet consuming. The garden that grows in shadow.</p>
+    <p style="margin-bottom:24px;">We move fast, ship often, and never release something we wouldn't lose sleep over ourselves.</p>
+    <a href="contact.html" class="about-link">Get in touch</a>
+  </div>
+  <div class="stats">
+    <div class="stat s-jade">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Games in Dev</div>
+    </div>
+    <div class="stat s-anima">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Replayability</div>
+    </div>
+    <div class="stat s-gold">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Compromises</div>
+    </div>
+    <div class="stat s-mist">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Worlds to Build</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">
+      <span class="logo-void">VOID</span><span class="logo-garden">GARDEN</span>
+    </div>
+    <div class="footer-tagline">where the garden meets the void</div>
+  </div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="contact.html">Contact</a>
+    <a href="#games">Games</a>
+  </div>
+  <div class="footer-copy">© 2026 VoidGarden</div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left = mx-3+'px';
+  cursor.style.top  = my-3+'px';
+});
+function animRing() {
+  rx += (mx-rx-12)*0.1;
+  ry += (my-ry-12)*0.1;
+  ring.style.left = rx+'px';
+  ring.style.top  = ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+window.addEventListener('scroll', () =>
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40));
+
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'scale(2)';
+    cursor.style.background = 'var(--gold)';
+    ring.style.borderColor = 'rgba(200,168,75,0.6)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'scale(1)';
+    cursor.style.background = 'var(--gold)';
+    ring.style.borderColor = 'rgba(200,168,75,0.5)';
+  });
+});
+
+// Stars — cold blue-white Shadowlands palette
+const starsEl = document.getElementById('stars');
+const starColors = ['#ffffff','#C0D8FF','#D0C8FF','#B8E8D8'];
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const sz = Math.random() > 0.85 ? 2.5 : 1.2;
+  s.style.cssText = `
+    left:${Math.random()*100}%;
+    top:${Math.random()*100}%;
+    width:${sz}px; height:${sz}px;
+    background:${starColors[Math.floor(Math.random()*starColors.length)]};
+    --d:${3+Math.random()*6}s;
+    --o:${0.1+Math.random()*0.5};
+    --delay:-${Math.random()*8}s;
+  `;
+  starsEl.appendChild(s);
+}
+</script>
+</body>
+</html>
