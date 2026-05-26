@@ -3,1066 +3,293 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VoidGarden — Where the Garden Meets the Void</title>
-<meta name="description" content="VoidGarden is an independent mobile game studio. Ancient beauty. Eternal shadow. Games worth losing sleep over.">
+<title>VoidGarden — where the garden meets the void</title>
+<meta name="description" content="VoidGarden is an independent mobile game studio. Atmospheric arcade and adventure games where light is pressed against dark.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Shadowlands base */
-    --bg-deep:    #05080F;
-    --bg-mid:     #0A0E1A;
-    --bg-surface: #0F1520;
-    --bg-card:    #0D1220;
+    --bg-deep:#05080F; --bg-mid:#0A0E1A; --bg-surface:#0F1520; --bg-card:#0D1220;
+    --jade:#5BA88A; --jade-dim:rgba(91,168,138,0.12); --jade-glow:rgba(91,168,138,0.06);
+    --gold:#C8A84B; --gold-bright:#E8C96A; --gold-dim:rgba(200,168,75,0.15); --gold-border:rgba(200,168,75,0.25);
+    --anima:#C8C0D8; --anima-dim:rgba(200,192,216,0.12);
+    --text-primary:#F5E6C8; --text-secondary:rgba(245,230,200,0.55); --text-muted:rgba(245,230,200,0.3);
+    --border:rgba(200,168,75,0.18); --border-hover:rgba(200,168,75,0.4);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--bg-deep);color:var(--text-primary);font-family:'Crimson Text',serif;line-height:1.7;}
+  body{cursor:none;}
+  a{color:inherit;text-decoration:none;}
+  .cursor{width:6px;height:6px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-3px,-3px);transition:transform 0.15s ease;}
+  .cursor-ring{width:24px;height:24px;border:1px solid rgba(200,168,75,0.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-9px,-9px);transition:all 0.12s ease;}
+  @media (hover:none){body{cursor:auto;}.cursor,.cursor-ring{display:none;}}
+  .atmosphere{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(91,168,138,0.03) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 0% 60%,rgba(26,13,46,0.6) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 100% 40%,rgba(200,192,216,0.04) 0%,transparent 60%);}
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 12% 18%,rgba(245,230,200,0.4),transparent),radial-gradient(1.2px 1.2px at 41% 32%,rgba(200,216,255,0.5),transparent),radial-gradient(1px 1px at 68% 21%,rgba(245,230,200,0.45),transparent),radial-gradient(1.5px 1.5px at 25% 58%,rgba(200,200,255,0.5),transparent),radial-gradient(1.2px 1.2px at 82% 64%,rgba(245,230,200,0.3),transparent),radial-gradient(1px 1px at 7% 88%,rgba(245,230,200,0.4),transparent),radial-gradient(1.3px 1.3px at 93% 82%,rgba(200,216,255,0.4),transparent);}
 
-    /* MoP jade warmth bleeding through */
-    --jade:       #5BA88A;
-    --jade-dim:   rgba(91,168,138,0.12);
-    --jade-glow:  rgba(91,168,138,0.06);
+  nav{position:fixed;top:0;left:0;right:0;padding:18px 56px;display:flex;justify-content:space-between;align-items:center;z-index:100;transition:all 0.3s;}
+  nav.scrolled{background:rgba(5,8,15,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Cinzel',serif;font-size:16px;font-weight:700;letter-spacing:0.12em;}
+  .logo-void{color:var(--anima);}.logo-garden{color:var(--jade);}
+  .nav-links{display:flex;gap:28px;align-items:center;}
+  .nav-links a{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--text-muted);text-transform:uppercase;transition:color 0.2s;}
+  .nav-links a:hover{color:var(--gold);}
+  .nav-social{display:flex;gap:12px;padding-left:14px;border-left:1px solid var(--border);margin-left:14px;}
+  .nav-social a{display:flex;align-items:center;color:var(--text-muted);transition:color 0.2s;}
+  .nav-social a:hover{color:var(--gold);}
+  .nav-social svg{width:14px;height:14px;}
 
-    /* WoW gold — used sparingly, ornate */
-    --gold:       #C8A84B;
-    --gold-bright:#E8C96A;
-    --gold-dim:   rgba(200,168,75,0.15);
-    --gold-border:rgba(200,168,75,0.25);
+  section.hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 56px 80px;max-width:1280px;margin:0 auto;}
+  .hero-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);opacity:0.6;}
+  .hero-kicker{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.4em;color:var(--jade);text-transform:uppercase;margin-bottom:32px;display:flex;align-items:center;gap:14px;}
+  .hero-kicker::before,.hero-kicker::after{content:'';display:block;height:1px;background:linear-gradient(to right,transparent,var(--jade));opacity:0.5;width:28px;}
+  .hero-kicker::after{background:linear-gradient(to left,transparent,var(--jade));}
+  h1.hero-title{font-family:'Cinzel',serif;font-size:clamp(64px,11vw,148px);font-weight:700;letter-spacing:0.02em;line-height:0.95;margin-bottom:32px;}
+  .t-void{color:var(--anima);display:block;}
+  .t-garden{color:transparent;-webkit-text-stroke:1px rgba(91,168,138,0.6);display:block;}
+  .hero-tagline{font-family:'Crimson Text',serif;font-style:italic;font-size:clamp(20px,2.2vw,26px);color:var(--gold);letter-spacing:0.02em;margin-bottom:20px;}
+  .hero-desc{font-size:17px;color:var(--text-secondary);max-width:580px;margin-bottom:48px;}
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;}
+  .btn-gold,.btn-ghost{display:inline-block;padding:14px 32px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;border:1px solid;position:relative;overflow:hidden;transition:all 0.25s;}
+  .btn-gold{color:var(--gold);border-color:var(--gold-border);background:transparent;}
+  .btn-gold::before{content:'';position:absolute;inset:0;background:var(--gold-dim);transform:scaleX(0);transform-origin:left;transition:transform 0.25s ease;z-index:0;}
+  .btn-gold span{position:relative;z-index:1;}
+  .btn-gold:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .btn-gold:hover::before{transform:scaleX(1);}
+  .btn-ghost{color:var(--text-secondary);border-color:var(--border);background:transparent;}
+  .btn-ghost:hover{color:var(--text-primary);border-color:var(--border-hover);}
 
-    /* Shadowlands anima — cold soul energy */
-    --anima:      #C8C0D8;
-    --anima-dim:  rgba(200,192,216,0.12);
+  section.content{position:relative;z-index:2;padding:120px 56px;max-width:1280px;margin:0 auto;}
+  .section-kicker{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.4em;color:var(--jade);text-transform:uppercase;margin-bottom:12px;}
+  h2.section-title{font-family:'Cinzel',serif;font-size:48px;font-weight:600;letter-spacing:0.02em;margin-bottom:24px;}
+  .section-desc{font-family:'Crimson Text',serif;font-size:17px;color:var(--text-secondary);max-width:640px;margin-bottom:56px;font-style:italic;}
+  .gold-divider{height:1px;background:linear-gradient(to right,transparent,var(--gold-dim),rgba(200,168,75,0.35),var(--gold-dim),transparent);margin:0 56px;position:relative;}
+  .gold-divider::before,.gold-divider::after{content:'✦';position:absolute;top:50%;transform:translateY(-50%);color:var(--gold);font-size:8px;opacity:0.5;}
+  .gold-divider::before{left:56px;}.gold-divider::after{right:56px;}
 
-    /* Text — warm parchment */
-    --text-primary:  #F5E6C8;
-    --text-secondary:rgba(245,230,200,0.55);
-    --text-muted:    rgba(245,230,200,0.3);
+  .featured-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+  @media(max-width:980px){.featured-grid{grid-template-columns:1fr;}}
+  .feat-card{background:var(--bg-card);padding:40px;position:relative;transition:background 0.3s;display:flex;flex-direction:column;min-height:300px;}
+  .feat-card:hover{background:var(--bg-mid);}
+  .feat-status{display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px;}
+  .dot{width:4px;height:4px;border-radius:50%;}
+  .dot.live{background:var(--jade);animation:dotPulse 2s ease-in-out infinite;}
+  .dot.dev{background:var(--anima);}.dot.planned{background:rgba(245,230,200,0.2);}
+  @keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(91,168,138,0.5);}50%{box-shadow:0 0 0 4px rgba(91,168,138,0);}}
+  .feat-glyph{font-size:32px;margin-bottom:18px;line-height:1;}
+  .feat-name{font-family:'Cinzel',serif;font-size:22px;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;color:var(--text-primary);}
+  .feat-genre{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--jade);text-transform:uppercase;margin-bottom:18px;}
+  .feat-desc{font-family:'Crimson Text',serif;font-style:italic;font-size:15px;color:var(--text-secondary);flex:1;}
+  .feat-card .arrow{position:absolute;bottom:30px;right:30px;width:24px;height:24px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-muted);transition:all 0.2s;}
+  .feat-card:hover .arrow{border-color:var(--gold-border);color:var(--gold);}
+  .all-games-cta{text-align:center;margin-top:56px;}
 
-    /* Borders — thin gold frames like WoW UI */
-    --border:     rgba(200,168,75,0.18);
-    --border-hover:rgba(200,168,75,0.4);
+  .stats-row{display:flex;justify-content:center;gap:80px;margin-top:48px;flex-wrap:wrap;}
+  .stat{text-align:center;}
+  .stat-num{font-family:'Cinzel',serif;font-size:64px;font-weight:700;color:var(--gold);margin-bottom:6px;line-height:1;}
+  .stat-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.3em;color:var(--text-muted);text-transform:uppercase;}
 
-    /* Void shadow purple — deep, not neon */
-    --void-purple:#1A0D2E;
-    --shadow:     rgba(10,5,20,0.8);
-  }
+  .philosophy{padding:120px 56px;background:linear-gradient(180deg,transparent 0%,rgba(13,18,32,0.4) 50%,transparent 100%);position:relative;z-index:2;}
+  .philosophy-inner{max-width:780px;margin:0 auto;text-align:center;}
+  .philosophy blockquote{font-family:'Crimson Text',serif;font-style:italic;font-size:24px;line-height:1.6;color:var(--text-primary);margin:24px 0;border:none;}
+  .philosophy blockquote::before{content:'"';color:var(--gold);font-size:48px;line-height:0;vertical-align:-12px;margin-right:8px;}
+  .philosophy blockquote::after{content:'"';color:var(--gold);font-size:48px;line-height:0;vertical-align:-12px;margin-left:8px;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  footer{position:relative;z-index:2;padding:80px 56px 40px;border-top:1px solid var(--border);background:rgba(5,8,15,0.6);}
+  .footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px;}
+  @media(max-width:760px){.footer-inner{grid-template-columns:1fr;gap:32px;}}
+  .footer-brand .nav-logo{font-size:18px;display:inline-block;margin-bottom:14px;}
+  .footer-tagline{font-family:'Crimson Text',serif;font-style:italic;font-size:15px;color:var(--gold);margin-bottom:14px;}
+  .footer-blurb{font-size:14px;color:var(--text-secondary);max-width:300px;}
+  .footer-col h4{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.3em;color:var(--jade);text-transform:uppercase;margin-bottom:18px;}
+  .footer-col a{display:block;font-size:14px;color:var(--text-secondary);padding:4px 0;transition:color 0.2s;}
+  .footer-col a:hover{color:var(--gold);}
+  .footer-social{display:flex;gap:10px;flex-wrap:wrap;}
+  .footer-social a{padding:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);transition:all 0.2s;color:var(--text-muted);}
+  .footer-social a:hover{border-color:var(--gold-border);color:var(--gold);}
+  .footer-social svg{width:14px;height:14px;}
+  .footer-bottom{max-width:1280px;margin:0 auto;padding-top:32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  .footer-mark{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.4em;color:var(--text-muted);text-transform:uppercase;}
+  .footer-copy{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--text-muted);}
 
-  body {
-    background: var(--bg-deep);
-    color: var(--text-primary);
-    font-family: 'Crimson Text', serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* Cursor */
-  .cursor {
-    width: 6px; height: 6px;
-    background: var(--gold);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-  }
-  .cursor-ring {
-    width: 24px; height: 24px;
-    border: 1px solid rgba(200,168,75,0.5);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.12s ease;
-    transform: translate(-9px,-9px);
-  }
-
-  /* Deep void atmosphere */
-  .atmosphere {
-    position: fixed; inset: 0;
-    pointer-events: none; z-index: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 50% 0%,   rgba(91,168,138,0.03) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 60% at 0%   60%,  rgba(26,13,46,0.6)   0%, transparent 70%),
-      radial-gradient(ellipse 40% 40% at 100% 40%,  rgba(200,192,216,0.04) 0%, transparent 60%);
-  }
-
-  /* Stars — cold Shadowlands blue-white */
-  .stars { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-  .star {
-    position: absolute; border-radius: 50%;
-    animation: starPulse var(--d) ease-in-out infinite var(--delay);
-    opacity: 0;
-  }
-  @keyframes starPulse {
-    0%,100% { opacity: 0; }
-    50%      { opacity: var(--o); }
-  }
-
-  /* Floating mist particles */
-  .mist-particle {
-    position: fixed;
-    border-radius: 50%;
-    background: rgba(91,168,138,0.08);
-    pointer-events: none;
-    z-index: 0;
-    animation: mistFloat linear infinite;
-  }
-  @keyframes mistFloat {
-    0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-    20%  { opacity: 1; }
-    80%  { opacity: 0.6; }
-    100% { transform: translateY(-80px) translateX(20px) scale(1.3); opacity: 0; }
-  }
-
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 18px 56px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid transparent;
-    transition: all 0.4s ease;
-  }
-  nav.scrolled {
-    background: rgba(5,8,15,0.96);
-    backdrop-filter: blur(20px);
-    border-color: var(--border);
-  }
-
-  .nav-logo {
-    font-family: 'Cinzel', serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-decoration: none;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 0;
-  }
-  .logo-void   { color: var(--anima); }
-  .logo-garden { color: var(--jade); }
-
-  .nav-links { display: flex; gap: 36px; align-items: center; }
-  .nav-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--gold); }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 56px;
-    position: relative;
-    z-index: 2;
-    overflow: hidden;
-  }
-
-  /* Gold decorative line — WoW frame feel */
-  .hero-line {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(to right,
-      transparent,
-      var(--gold-dim),
-      var(--gold),
-      var(--gold-dim),
-      transparent);
-    opacity: 0.6;
-  }
-
-  .hero-content { position: relative; z-index: 2; max-width: 800px; }
-
-  .hero-kicker {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    color: var(--jade);
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: appear 1s ease forwards 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .hero-kicker::before,
-  .hero-kicker::after {
-    content: '';
-    display: block;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--jade));
-    opacity: 0.5;
-  }
-  .hero-kicker::before { width: 28px; }
-  .hero-kicker::after  { width: 28px; background: linear-gradient(to left, transparent, var(--jade)); }
-
-  .hero-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(52px, 9vw, 108px);
-    font-weight: 700;
-    line-height: 0.9;
-    letter-spacing: 0.04em;
-    margin-bottom: 6px;
-    opacity: 0;
-    animation: appear 1s ease forwards 0.5s;
-  }
-  .hero-title .t-void   { color: var(--anima); display: block; }
-  .hero-title .t-garden {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(91,168,138,0.6);
-    display: block;
-  }
-
-  .hero-ornament {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: appear 1s ease forwards 0.65s;
-  }
-  .hero-ornament .line {
-    height: 1px;
-    width: 60px;
-    background: linear-gradient(to right, var(--gold-dim), var(--gold));
-    opacity: 0.5;
-  }
-  .hero-ornament .tagline {
-    font-family: 'Crimson Text', serif;
-    font-size: 16px;
-    font-style: italic;
-    color: var(--gold);
-    letter-spacing: 0.06em;
-  }
-
-  .hero-sub {
-    font-size: 19px;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    max-width: 520px;
-    margin-bottom: 48px;
-    opacity: 0;
-    animation: appear 1s ease forwards 0.8s;
-  }
-
-  .hero-cta {
-    display: flex;
-    gap: 16px;
-    opacity: 0;
-    animation: appear 1s ease forwards 1s;
-  }
-
-  .btn-gold {
-    padding: 12px 32px;
-    background: transparent;
-    color: var(--gold);
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid var(--gold-border);
-    cursor: none;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .btn-gold::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--gold-dim);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.25s ease;
-  }
-  .btn-gold:hover { border-color: var(--gold); color: var(--gold-bright); }
-  .btn-gold:hover::before { transform: scaleX(1); }
-  .btn-gold span { position: relative; z-index: 1; }
-
-  .btn-ghost {
-    padding: 12px 32px;
-    background: transparent;
-    color: var(--text-secondary);
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid rgba(245,230,200,0.1);
-    cursor: none;
-    transition: all 0.25s;
-  }
-  .btn-ghost:hover { border-color: rgba(245,230,200,0.25); color: var(--text-primary); }
-
-  /* Scroll indicator */
-  .scroll-hint {
-    position: absolute;
-    bottom: 36px; left: 56px;
-    display: flex; align-items: center; gap: 14px;
-    opacity: 0;
-    animation: appear 1s ease forwards 1.4s;
-  }
-  .scroll-pip {
-    width: 1px; height: 40px;
-    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-    opacity: 0.5;
-    animation: pipGlow 2s ease-in-out infinite;
-  }
-  @keyframes pipGlow {
-    0%,100% { opacity: 0.3; }
-    50%      { opacity: 0.8; }
-  }
-  .scroll-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    writing-mode: vertical-rl;
-  }
-
-  /* SECTION SHARED */
-  .gold-divider {
-    height: 1px;
-    background: linear-gradient(to right,
-      transparent,
-      var(--gold-dim),
-      rgba(200,168,75,0.35),
-      var(--gold-dim),
-      transparent);
-    margin: 0 56px;
-    position: relative; z-index: 2;
-  }
-  .gold-divider::before,
-  .gold-divider::after {
-    content: '✦';
-    position: absolute;
-    top: 50%; transform: translateY(-50%);
-    color: var(--gold);
-    font-size: 8px;
-    opacity: 0.5;
-  }
-  .gold-divider::before { left: 56px; }
-  .gold-divider::after  { right: 56px; }
-
-  .section-kicker {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.4em;
-    color: var(--jade);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .section-heading {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(26px, 4vw, 44px);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--text-primary);
-    margin-bottom: 56px;
-    line-height: 1.1;
-  }
-  .section-heading .gold-word { color: var(--gold); }
-  .section-heading .jade-word { color: var(--jade); }
-
-  /* GAMES */
-  .games {
-    padding: 96px 56px;
-    position: relative; z-index: 2;
-  }
-
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-
-  .game-card {
-    background: var(--bg-card);
-    padding: 40px;
-    position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    color: var(--text-primary);
-    display: block;
-    min-height: 360px;
-    transition: background 0.3s;
-  }
-  .game-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(to right,
-      transparent,
-      var(--card-accent, var(--gold-dim)),
-      transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .game-card:hover { background: #10172A; }
-  .game-card:hover::before { opacity: 1; }
-
-  .game-card.shadow-b  { --card-accent: rgba(91,168,138,0.4); }
-  .game-card.void-s    { --card-accent: rgba(200,192,216,0.4); }
-  .game-card.sakura    { --card-accent: rgba(200,168,75,0.4); }
-  .game-card.fling-c   { --card-accent: rgba(91,168,138,0.3); }
-  .game-card.panda-c   { --card-accent: rgba(200,168,75,0.3); }
-
-  .game-status {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-muted);
-  }
-  .dot {
-    width: 4px; height: 4px;
-    border-radius: 50%;
-  }
-  .dot.live    { background: var(--jade); animation: dotPulse 2s ease-in-out infinite; }
-  .dot.dev     { background: var(--anima); }
-  .dot.planned { background: rgba(245,230,200,0.2); }
-  @keyframes dotPulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(91,168,138,0.5); }
-    50%      { box-shadow: 0 0 0 4px rgba(91,168,138,0); }
-  }
-
-  .game-icon { font-size: 40px; margin-bottom: 18px; display: block; line-height: 1; }
-  .game-name {
-    font-family: 'Cinzel', serif;
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    margin-bottom: 4px;
-    color: var(--text-primary);
-  }
-  .game-genre {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    color: var(--jade);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-  }
-  .game-desc {
-    font-size: 15px;
-    color: var(--text-secondary);
-    line-height: 1.65;
-    margin-bottom: 24px;
-    font-style: italic;
-  }
-  .game-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-  .tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 8px;
-    letter-spacing: 0.1em;
-    padding: 3px 8px;
-    text-transform: uppercase;
-    border: 1px solid;
-  }
-  .tag.gold  { border-color: rgba(200,168,75,0.3);  color: var(--gold); }
-  .tag.jade  { border-color: rgba(91,168,138,0.3);  color: var(--jade); }
-  .tag.anima { border-color: rgba(200,192,216,0.3); color: var(--anima); }
-  .tag.mist  { border-color: rgba(245,230,200,0.15);color: var(--text-secondary); }
-
-  .card-arrow {
-    position: absolute;
-    bottom: 40px; right: 40px;
-    width: 24px; height: 24px;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-    color: var(--text-muted);
-    transition: all 0.2s;
-  }
-  .game-card:hover .card-arrow {
-    border-color: var(--gold-border);
-    color: var(--gold);
-  }
-
-  /* PHILOSOPHY */
-  .philosophy {
-    padding: 96px 56px;
-    position: relative; z-index: 2;
-    text-align: center;
-  }
-  .philosophy-inner { max-width: 700px; margin: 0 auto; }
-
-  .philosophy-quote {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(20px, 3vw, 34px);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    line-height: 1.4;
-    margin-bottom: 16px;
-    color: var(--text-primary);
-  }
-  .philosophy-quote .gold-line { color: var(--gold); display: block; }
-  .philosophy-quote .jade-line { color: var(--jade); display: block; }
-  .philosophy-quote .anima-line { color: var(--anima); display: block; }
-
-  .philosophy-italic {
-    font-family: 'Crimson Text', serif;
-    font-size: 17px;
-    font-style: italic;
-    color: var(--text-muted);
-    margin-bottom: 52px;
-    letter-spacing: 0.04em;
-  }
-
-  .pillars {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    max-width: 560px;
-    margin: 0 auto;
-  }
-  .pillar {
-    background: var(--bg-card);
-    padding: 28px 20px;
-    text-align: center;
-  }
-  .pillar-symbol {
-    font-family: 'Cinzel', serif;
-    font-size: 22px;
-    color: var(--gold);
-    margin-bottom: 10px;
-    display: block;
-    opacity: 0.7;
-  }
-  .pillar-word {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-
-  /* ABOUT */
-  .about {
-    padding: 96px 56px;
-    position: relative; z-index: 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: start;
-  }
-
-  .about-text p {
-    font-size: 17px;
-    color: var(--text-secondary);
-    line-height: 1.8;
-    margin-bottom: 18px;
-    font-style: italic;
-  }
-  .about-text p strong {
-    color: var(--text-primary);
-    font-style: normal;
-    font-weight: 600;
-  }
-  .about-link {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--jade);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .about-link::after { content: '→'; transition: transform 0.2s; }
-  .about-link:hover { color: var(--gold); }
-  .about-link:hover::after { transform: translateX(4px); }
-
-  .stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-  .stat {
-    background: var(--bg-card);
-    padding: 28px 24px;
-    position: relative;
-    overflow: hidden;
-  }
-  .stat::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 1px;
-    background: linear-gradient(to right, transparent, var(--s-color, var(--gold)), transparent);
-    opacity: 0.3;
-  }
-  .stat.s-jade  { --s-color: var(--jade); }
-  .stat.s-anima { --s-color: var(--anima); }
-  .stat.s-gold  { --s-color: var(--gold); }
-  .stat.s-mist  { --s-color: var(--text-secondary); }
-
-  .stat-num {
-    font-family: 'Cinzel', serif;
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .stat.s-jade  .stat-num { color: var(--jade); }
-  .stat.s-anima .stat-num { color: var(--anima); }
-  .stat.s-gold  .stat-num { color: var(--gold); }
-  .stat.s-mist  .stat-num { color: var(--text-secondary); }
-
-  .stat-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-
-  /* FOOTER */
-  footer {
-    padding: 36px 56px;
-    position: relative; z-index: 2;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .footer-logo {
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-  }
-  .footer-logo .logo-void   { color: var(--anima); }
-  .footer-logo .logo-garden { color: var(--jade); }
-  .footer-tagline {
-    font-family: 'Crimson Text', serif;
-    font-size: 13px;
-    font-style: italic;
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
-    margin-top: 3px;
-  }
-  .footer-links { display: flex; gap: 28px; }
-  .footer-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--gold); }
-  .footer-copy {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-  }
-
-  @keyframes appear {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 768px) {
-    nav { padding: 16px 24px; }
-    .nav-links { display: none; }
-    .hero, .games, .about, .philosophy { padding-left: 24px; padding-right: 24px; }
-    .gold-divider { margin: 0 24px; }
-    .hero-cta { flex-direction: column; }
-    .about { grid-template-columns: 1fr; gap: 48px; }
-    .pillars { grid-template-columns: 1fr; max-width: 280px; }
-    footer { padding: 28px 24px; flex-direction: column; gap: 20px; text-align: center; }
-    .footer-links { flex-wrap: wrap; justify-content: center; }
+  @media(max-width:760px){
+    nav{padding:14px 24px;}
+    .nav-links{gap:14px;}
+    .nav-links a:not(.nav-logo){font-size:9px;}
+    .nav-social{padding-left:8px;margin-left:8px;gap:8px;}
+    section.hero,section.content,.philosophy,footer{padding-left:24px;padding-right:24px;}
+    .gold-divider{margin:0 24px;}
+    .gold-divider::before{left:24px;}.gold-divider::after{right:24px;}
+    .stats-row{gap:40px;}
+    .stat-num{font-size:48px;}
   }
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
 <div class="atmosphere"></div>
-<div class="stars" id="stars"></div>
+<div class="stars"></div>
 
-<nav id="nav">
-  <a href="#" class="nav-logo">
-    <span class="logo-void">VOID</span><span class="logo-garden">GARDEN</span>
-  </a>
+<nav>
+  <a href="/" class="nav-logo"><span class="logo-void">VOID</span><span class="logo-garden">GARDEN</span></a>
   <div class="nav-links">
-    <a href="#games">Games</a>
-    <a href="#about">Studio</a>
-    <a href="contact.html">Contact</a>
-    <a href="privacy.html">Privacy</a>
+    <a href="/games.html">Games</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy.html">Privacy</a>
+    <div class="nav-social">
+      <a href="https://www.instagram.com/voidgardengames/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+      <a href="https://www.threads.com/@voidgardengames" target="_blank" rel="noopener" aria-label="Threads">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.18 21.5h-.05c-3.13-.02-5.54-1.07-7.16-3.12C3.53 16.55 2.79 14 2.78 12c-.01-2 .72-4.6 2.16-6.43C6.56 3.55 8.97 2.5 12.13 2.5c3.16 0 5.58 1.03 7.21 3.05 1.6 1.97 2.43 4.66 2.5 8 0 1.4-.4 2.55-1.17 3.42-.95 1.06-2.36 1.65-3.97 1.66-1.31 0-2.5-.5-3.36-1.41-.59-.62-.99-1.43-1.18-2.4-.05.04-.11.07-.17.1-.99.46-1.92.55-2.66.27-.92-.35-1.62-1.1-1.92-2.07-.41-1.32-.04-2.96.94-4.05.74-.83 1.85-1.32 3-1.3 1.3.02 2.41.55 3.21 1.55.51.63.83 1.41.99 2.27.07-.05.14-.1.21-.14.55-.27 1.18-.31 1.81-.13.66.19 1.16.61 1.43 1.21.5 1.13.02 2.65-1.07 3.41-.74.52-1.59.66-2.38.39-.45-.15-.86-.42-1.18-.77 0 .61.16 1.16.46 1.6.55.81 1.51 1.27 2.7 1.28h.02c1.27 0 2.29-.46 2.94-1.34.55-.74.84-1.79.83-3.04-.06-3.06-.84-5.52-2.28-7.32-1.41-1.76-3.5-2.66-6.21-2.66-2.7 0-4.78.92-6.19 2.73-1.34 1.72-2.03 4.21-2.02 6.21.01 2 .7 4.49 2.06 6.21 1.42 1.78 3.51 2.69 6.21 2.7h.04c2.43 0 4.04-.57 5.39-1.91l1.41 1.41C18.7 20.74 16.5 21.5 12.18 21.5zm.83-12.95c-.71 0-1.39.28-1.87.82-.53.59-.74 1.55-.51 2.29.16.51.55.92 1.07 1.13.49.19 1.12.11 1.78-.19 1.18-.55 1.91-1.94 1.7-3.23-.16-1-.96-1.79-2.06-1.82h-.11z"/></svg>
+      </a>
+      <a href="https://x.com/voidgardengames" target="_blank" rel="noopener" aria-label="X">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-line"></div>
-  <div class="hero-content">
-    <p class="hero-kicker">Independent Game Studio</p>
-    <h1 class="hero-title">
-      <span class="t-void">VOID</span>
-      <span class="t-garden">GARDEN</span>
-    </h1>
-    <div class="hero-ornament">
-      <div class="line"></div>
-      <span class="tagline">Where the garden meets the void</span>
-      <div class="line" style="background:linear-gradient(to left,var(--gold-dim),var(--gold));"></div>
-    </div>
-    <p class="hero-sub">We build mobile games at the intersection of ancient beauty and eternal shadow. Every title carries both worlds — the warmth of jade mist and the depth of the void.</p>
-    <div class="hero-cta">
-      <a href="#games" class="btn-gold"><span>Explore Games</span></a>
-      <a href="#about" class="btn-ghost">Our Studio</a>
-    </div>
-  </div>
-  <div class="scroll-hint">
-    <div class="scroll-pip"></div>
-    <span class="scroll-label">Scroll</span>
+  <div class="hero-kicker">Independent Mobile Game Studio</div>
+  <h1 class="hero-title">
+    <span class="t-void">VOID</span>
+    <span class="t-garden">GARDEN</span>
+  </h1>
+  <p class="hero-tagline">where the garden meets the void.</p>
+  <p class="hero-desc">Atmospheric arcade and adventure games for iOS. Light pressed against dark. Ancient beauty against cosmic silence. Thirteen games on the path, one studio behind them.</p>
+  <div class="hero-ctas">
+    <a href="/games.html" class="btn-gold"><span>↗ Explore the Catalog</span></a>
+    <a href="/contact.html" class="btn-ghost">Get in touch</a>
   </div>
 </section>
 
 <div class="gold-divider"></div>
 
-<!-- GAMES -->
-<section class="games" id="games">
-  <p class="section-kicker">Portfolio</p>
-  <h2 class="section-heading">Our <span class="gold-word">Games</span></h2>
+<section class="content">
+  <div class="section-kicker">Currently Shipping</div>
+  <h2 class="section-title">Three games in motion</h2>
+  <p class="section-desc">Each game lives in the brand's tension — garden and void in conversation. These three are live, in submission, or moments from launch.</p>
 
-  <div class="games-grid">
+  <div class="featured-grid">
+    <article class="feat-card">
+      <div class="feat-status"><span class="dot live"></span>Live</div>
+      <div class="feat-glyph">🌸</div>
+      <h3 class="feat-name">Shadow Blossom</h3>
+      <div class="feat-genre">One-Tap Crane Flight</div>
+      <p class="feat-desc">A crane in the gathering dusk. Time the rhythm or fall to the deep. Sunset gradient, vermillion torii, ancient quiet.</p>
+      <div class="arrow">↗</div>
+    </article>
 
-    <a href="#" class="game-card voidquest" style="--card-accent: rgba(200,168,75,0.5);">
-      <div class="game-status"><div class="dot dev"></div>In Development · Anchor</div>
-      <span class="game-icon">⚜</span>
-      <h3 class="game-name">VoidQuest</h3>
-      <p class="game-genre">Ancient RPG</p>
-      <p class="game-desc">Hollowpetal sleeps in the dusk. A hero, a withered grove, and a void that will not be appeased. Our first true world.</p>
-      <div class="game-tags">
-        <span class="tag gold">Anchor</span>
-        <span class="tag jade">RPG</span>
-        <span class="tag anima">Void</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
+    <article class="feat-card">
+      <div class="feat-status"><span class="dot live"></span>Submitted</div>
+      <div class="feat-glyph">⚡</div>
+      <h3 class="feat-name">Void Sprint</h3>
+      <div class="feat-genre">Shadow Platformer</div>
+      <p class="feat-desc">Run across the deep. Time your jumps. The void wants you to fall. The studio's debut — where the brand began.</p>
+      <div class="arrow">↗</div>
+    </article>
 
-    <a href="#" class="game-card void-s">
-      <div class="game-status"><div class="dot live"></div><span style="color:var(--jade);">On the App Store Soon</span></div>
-      <span class="game-icon">⚡</span>
-      <h3 class="game-name">Void Sprint</h3>
-      <p class="game-genre">Shadow Platformer</p>
-      <p class="game-desc">Sprint through the eternal dusk. Jump between crumbling platforms as void energy consumes everything behind you.</p>
-      <div class="game-tags">
-        <span class="tag anima">Shadow</span>
-        <span class="tag mist">Endless</span>
-        <span class="tag mist">Platformer</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
+    <article class="feat-card">
+      <div class="feat-status"><span class="dot dev"></span>Coming Soon</div>
+      <div class="feat-glyph">🪐</div>
+      <h3 class="feat-name">Fling — Orbit &amp; Drift</h3>
+      <div class="feat-genre">One-Tap Orbit Arcade</div>
+      <p class="feat-desc">Tap. Release. Drift. One tap. Pure skill. The void is patient. Gold corona, breathing atmosphere, hidden Eclipse mode.</p>
+      <div class="arrow">↗</div>
+    </article>
+  </div>
 
-    <a href="#" class="game-card shadow-b">
-      <div class="game-status"><div class="dot live"></div><span style="color:var(--jade);">On the App Store Soon</span></div>
-      <span class="game-icon">🌸</span>
-      <h3 class="game-name">Shadow Blossom</h3>
-      <p class="game-genre">Torii Flyer</p>
-      <p class="game-desc">Tap to fly. Glide your crane through ancient torii gates as sunset burns behind distant pagodas. One tap, endless flight.</p>
-      <div class="game-tags">
-        <span class="tag gold">Sunset</span>
-        <span class="tag jade">One Tap</span>
-        <span class="tag mist">Arcade</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card shadow-road" style="--card-accent: rgba(200,192,216,0.3);">
-      <div class="game-status"><div class="dot dev"></div>In Development</div>
-      <span class="game-icon">🛤</span>
-      <h3 class="game-name">Shadow Road</h3>
-      <p class="game-genre">Endless Runner</p>
-      <p class="game-desc">An ancient stone road, lit only by void light. Dodge what shouldn't be there. Run until the dusk catches you.</p>
-      <div class="game-tags">
-        <span class="tag anima">Endless</span>
-        <span class="tag jade">Runner</span>
-        <span class="tag mist">Dodge</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card sakura">
-      <div class="game-status"><div class="dot dev"></div>In Development</div>
-      <span class="game-icon">🌸</span>
-      <h3 class="game-name">Sakura Drop</h3>
-      <p class="game-genre">Jade Temple Descent</p>
-      <p class="game-desc">A spirit falls through a rotating jade temple lost in ancient mist. Tap to spin. Fall deeper into the mystery.</p>
-      <div class="game-tags">
-        <span class="tag jade">Jade</span>
-        <span class="tag gold">Temple</span>
-        <span class="tag mist">Puzzle</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card fling-c">
-      <div class="game-status"><div class="dot dev"></div>In Development</div>
-      <span class="game-icon">🪐</span>
-      <h3 class="game-name">Fling</h3>
-      <p class="game-genre">Void Realm Orbit</p>
-      <p class="game-desc">Your soul orbits a void realm fragment. Release and fling to the next. Miss and drift into the eternal dark.</p>
-      <div class="game-tags">
-        <span class="tag anima">Void Realm</span>
-        <span class="tag mist">Orbit</span>
-        <span class="tag mist">Skill</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card mistwalker" style="--card-accent: rgba(91,168,138,0.35);">
-      <div class="game-status"><div class="dot dev"></div>In Development</div>
-      <span class="game-icon">🎋</span>
-      <h3 class="game-name">Mist Walker</h3>
-      <p class="game-genre">Bamboo Runner</p>
-      <p class="game-desc">A monk runs through bamboo woven with mist. Ancient discipline meets the encroaching void.</p>
-      <div class="game-tags">
-        <span class="tag jade">Ancient</span>
-        <span class="tag gold">Runner</span>
-        <span class="tag mist">Endless</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card voidstack" style="--card-accent: rgba(200,168,75,0.35);">
-      <div class="game-status"><div class="dot live"></div><span style="color:var(--jade);">Polishing</span></div>
-      <span class="game-icon">◼</span>
-      <h3 class="game-name">Void Stack</h3>
-      <p class="game-genre">Tile Merge</p>
-      <p class="game-desc">Stack the void. Merge the shadow. A meditation on numbers that does not forgive carelessness.</p>
-      <div class="game-tags">
-        <span class="tag anima">Merge</span>
-        <span class="tag gold">Puzzle</span>
-        <span class="tag mist">One Tap</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card ghostline" style="--card-accent: rgba(200,192,216,0.35);">
-      <div class="game-status"><div class="dot planned"></div>In Concept</div>
-      <span class="game-icon">◌</span>
-      <h3 class="game-name">Ghost Line</h3>
-      <p class="game-genre">Self-Ghost Race</p>
-      <p class="game-desc">Race your own shadow. Every run becomes the wall that the next must outrun.</p>
-      <div class="game-tags">
-        <span class="tag anima">Ghost</span>
-        <span class="tag jade">Race</span>
-        <span class="tag mist">Runner</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card mergevoid" style="--card-accent: rgba(91,168,138,0.3);">
-      <div class="game-status"><div class="dot planned"></div>In Concept</div>
-      <span class="game-icon">◉</span>
-      <h3 class="game-name">Merge Void</h3>
-      <p class="game-genre">Orb Merge</p>
-      <p class="game-desc">Drop the orb. Merge the void. Collect the creatures that crawl up from the deep.</p>
-      <div class="game-tags">
-        <span class="tag jade">Merge</span>
-        <span class="tag anima">Collect</span>
-        <span class="tag mist">Puzzle</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card soulseq" style="--card-accent: rgba(200,168,75,0.3);">
-      <div class="game-status"><div class="dot planned"></div>In Concept</div>
-      <span class="game-icon">✦</span>
-      <h3 class="game-name">Soul Sequence</h3>
-      <p class="game-genre">Memory</p>
-      <p class="game-desc">The void remembers. So must you. A sequence of light that grows longer than any mind can hold.</p>
-      <div class="game-tags">
-        <span class="tag gold">Memory</span>
-        <span class="tag anima">Pattern</span>
-        <span class="tag mist">Skill</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
-    <a href="#" class="game-card voidgarden-game" style="--card-accent: rgba(91,168,138,0.5);">
-      <div class="game-status"><div class="dot planned"></div>Flagship · Long Term</div>
-      <span class="game-icon">❀</span>
-      <h3 class="game-name">Void Garden</h3>
-      <p class="game-genre">Idle Garden</p>
-      <p class="game-desc">The garden that grows in shadow. Tend the bloom. Watch the void deepen. Our quiet flagship.</p>
-      <div class="game-tags">
-        <span class="tag gold">Flagship</span>
-        <span class="tag jade">Idle</span>
-        <span class="tag mist">Atmospheric</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </a>
-
+  <div class="all-games-cta">
+    <a href="/games.html" class="btn-ghost">View all 13 games →</a>
   </div>
 </section>
 
 <div class="gold-divider"></div>
 
-<!-- PHILOSOPHY -->
-<section class="philosophy">
-  <div class="philosophy-inner">
-    <p class="section-kicker" style="justify-content:center;display:flex;align-items:center;gap:10px;">
-      <span style="display:block;width:20px;height:1px;background:var(--jade);opacity:0.5;"></span>
-      Our Creed
-      <span style="display:block;width:20px;height:1px;background:var(--jade);opacity:0.5;"></span>
-    </p>
-    <h2 class="philosophy-quote">
-      <span class="gold-line">Ancient beauty.</span>
-      <span class="jade-line">Eternal shadow.</span>
-      <span class="anima-line">One more run.</span>
-    </h2>
-    <p class="philosophy-italic">Where ancient mist meets eternal void — every game we build lives between both worlds.</p>
-    <div class="pillars">
-      <div class="pillar">
-        <span class="pillar-symbol">✦</span>
-        <div class="pillar-word">Beautiful</div>
-      </div>
-      <div class="pillar">
-        <span class="pillar-symbol">✦</span>
-        <div class="pillar-word">Unforgiving</div>
-      </div>
-      <div class="pillar">
-        <span class="pillar-symbol">✦</span>
-        <div class="pillar-word">Eternal</div>
-      </div>
+<section class="content">
+  <div class="section-kicker">The Catalog</div>
+  <h2 class="section-title">Thirteen games. One world.</h2>
+  <p class="section-desc">Each game ships under one banner: A VOIDGARDEN GAME. Atmospheric arcade, adventure, and contemplative play — bound by a single visual language and a single thesis.</p>
+
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num">13</div>
+      <div class="stat-label">Games on the Path</div>
     </div>
-  </div>
-</section>
-
-<div class="gold-divider"></div>
-
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="about-text">
-    <p class="section-kicker">Studio</p>
-    <h2 class="section-heading" style="margin-bottom:28px;">Small studio.<br><span class="jade-word">Ancient vision.</span></h2>
-    <p>VoidGarden is an <strong>independent game studio</strong> building mobile games that exist at the crossroads of two worlds — the warm jade mist of ancient lands and the cold eternal shadow of the void.</p>
-    <p>Every game we make carries <strong>both</strong>. Peaceful yet deadly. Beautiful yet consuming. The garden that grows in shadow.</p>
-    <p style="margin-bottom:24px;">We move fast, ship often, and never release something we wouldn't lose sleep over ourselves.</p>
-    <a href="contact.html" class="about-link">Get in touch</a>
-  </div>
-  <div class="stats">
-    <div class="stat s-jade">
+    <div class="stat">
+      <div class="stat-num">1</div>
+      <div class="stat-label">Submitted</div>
+    </div>
+    <div class="stat">
       <div class="stat-num">12</div>
-      <div class="stat-label">Games in the Garden</div>
-    </div>
-    <div class="stat s-anima">
-      <div class="stat-num">∞</div>
-      <div class="stat-label">Replayability</div>
-    </div>
-    <div class="stat s-gold">
-      <div class="stat-num">0</div>
-      <div class="stat-label">Compromises</div>
-    </div>
-    <div class="stat s-mist">
-      <div class="stat-num">∞</div>
-      <div class="stat-label">Worlds to Build</div>
+      <div class="stat-label">Still to Come</div>
     </div>
   </div>
 </section>
+
+<div class="philosophy">
+  <div class="philosophy-inner">
+    <div class="section-kicker" style="justify-content:center;display:flex;">Philosophy</div>
+    <h2 class="section-title" style="font-size:36px;">Light against shadow</h2>
+    <blockquote>Where ancient mist meets eternal void — every game we build lives between both worlds. Two halves in tension. Neither half wins. The brand lives in the contrast.</blockquote>
+    <p class="footer-tagline" style="margin-top:24px;">— where the garden meets the void.</p>
+  </div>
+</div>
 
 <footer>
-  <div>
-    <div class="footer-logo">
-      <span class="logo-void">VOID</span><span class="logo-garden">GARDEN</span>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="nav-logo"><span class="logo-void">VOID</span><span class="logo-garden">GARDEN</span></a>
+      <p class="footer-tagline">where the garden meets the void.</p>
+      <p class="footer-blurb">Independent mobile game studio. Atmospheric arcade and adventure games for iOS.</p>
     </div>
-    <div class="footer-tagline">where the garden meets the void</div>
+    <div class="footer-col">
+      <h4>Catalog</h4>
+      <a href="/games.html">All Games</a>
+      <a href="/games.html#adventure">Adventure</a>
+      <a href="/games.html#arcade">Arcade</a>
+    </div>
+    <div class="footer-col">
+      <h4>Studio</h4>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="mailto:hello@voidgarden.com">hello@voidgarden.com</a>
+    </div>
+    <div class="footer-col">
+      <h4>Follow</h4>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/voidgardengames/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.threads.com/@voidgardengames" target="_blank" rel="noopener" aria-label="Threads">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.18 21.5h-.05c-3.13-.02-5.54-1.07-7.16-3.12C3.53 16.55 2.79 14 2.78 12c-.01-2 .72-4.6 2.16-6.43C6.56 3.55 8.97 2.5 12.13 2.5c3.16 0 5.58 1.03 7.21 3.05 1.6 1.97 2.43 4.66 2.5 8 0 1.4-.4 2.55-1.17 3.42-.95 1.06-2.36 1.65-3.97 1.66-1.31 0-2.5-.5-3.36-1.41-.59-.62-.99-1.43-1.18-2.4-.05.04-.11.07-.17.1-.99.46-1.92.55-2.66.27-.92-.35-1.62-1.1-1.92-2.07-.41-1.32-.04-2.96.94-4.05.74-.83 1.85-1.32 3-1.3 1.3.02 2.41.55 3.21 1.55.51.63.83 1.41.99 2.27.07-.05.14-.1.21-.14.55-.27 1.18-.31 1.81-.13.66.19 1.16.61 1.43 1.21.5 1.13.02 2.65-1.07 3.41-.74.52-1.59.66-2.38.39-.45-.15-.86-.42-1.18-.77 0 .61.16 1.16.46 1.6.55.81 1.51 1.27 2.7 1.28h.02c1.27 0 2.29-.46 2.94-1.34.55-.74.84-1.79.83-3.04-.06-3.06-.84-5.52-2.28-7.32-1.41-1.76-3.5-2.66-6.21-2.66-2.7 0-4.78.92-6.19 2.73-1.34 1.72-2.03 4.21-2.02 6.21.01 2 .7 4.49 2.06 6.21 1.42 1.78 3.51 2.69 6.21 2.7h.04c2.43 0 4.04-.57 5.39-1.91l1.41 1.41C18.7 20.74 16.5 21.5 12.18 21.5zm.83-12.95c-.71 0-1.39.28-1.87.82-.53.59-.74 1.55-.51 2.29.16.51.55.92 1.07 1.13.49.19 1.12.11 1.78-.19 1.18-.55 1.91-1.94 1.7-3.23-.16-1-.96-1.79-2.06-1.82h-.11z"/></svg>
+        </a>
+        <a href="https://x.com/voidgardengames" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
   </div>
-  <div class="footer-links">
-    <a href="privacy.html">Privacy</a>
-    <a href="contact.html">Contact</a>
-    <a href="#games">Games</a>
+  <div class="footer-bottom">
+    <p class="footer-mark">A V O I D G A R D E N · G A M E · S T U D I O</p>
+    <p class="footer-copy">© 2026 VoidGarden. All rights reserved.</p>
   </div>
-  <div class="footer-copy">© 2026 VoidGarden</div>
 </footer>
 
 <script>
-const cursor = document.getElementById('cursor');
-const ring   = document.getElementById('cursorRing');
+const cursor=document.querySelector('.cursor');
+const ring=document.querySelector('.cursor-ring');
 let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+function tick(){rx+=(mx-rx)*0.15;ry+=(my-ry)*0.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);}tick();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-3px,-3px) scale(2)';ring.style.borderColor='rgba(200,168,75,0.6)';});el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-3px,-3px) scale(1)';ring.style.borderColor='rgba(200,168,75,0.5)';});});
 
-document.addEventListener('mousemove', e => {
-  mx=e.clientX; my=e.clientY;
-  cursor.style.left = mx-3+'px';
-  cursor.style.top  = my-3+'px';
-});
-function animRing() {
-  rx += (mx-rx-12)*0.1;
-  ry += (my-ry-12)*0.1;
-  ring.style.left = rx+'px';
-  ring.style.top  = ry+'px';
-  requestAnimationFrame(animRing);
-}
-animRing();
-
-window.addEventListener('scroll', () =>
-  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40));
-
-document.querySelectorAll('a,button').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.transform = 'scale(2)';
-    cursor.style.background = 'var(--gold)';
-    ring.style.borderColor = 'rgba(200,168,75,0.6)';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.transform = 'scale(1)';
-    cursor.style.background = 'var(--gold)';
-    ring.style.borderColor = 'rgba(200,168,75,0.5)';
-  });
-});
-
-// Stars — cold blue-white Shadowlands palette
-const starsEl = document.getElementById('stars');
-const starColors = ['#ffffff','#C0D8FF','#D0C8FF','#B8E8D8'];
-for (let i = 0; i < 120; i++) {
-  const s = document.createElement('div');
-  s.className = 'star';
-  const sz = Math.random() > 0.85 ? 2.5 : 1.2;
-  s.style.cssText = `
-    left:${Math.random()*100}%;
-    top:${Math.random()*100}%;
-    width:${sz}px; height:${sz}px;
-    background:${starColors[Math.floor(Math.random()*starColors.length)]};
-    --d:${3+Math.random()*6}s;
-    --o:${0.1+Math.random()*0.5};
-    --delay:-${Math.random()*8}s;
-  `;
-  starsEl.appendChild(s);
-}
+const nav=document.querySelector('nav');
+window.addEventListener('scroll',()=>{if(window.scrollY>40)nav.classList.add('scrolled');else nav.classList.remove('scrolled');});
 </script>
 </body>
 </html>
