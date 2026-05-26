@@ -4,105 +4,429 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Privacy Policy — VoidGarden</title>
+<meta name="description" content="VoidGarden's privacy policy. What we collect, what we don't, and how to reach us.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-deep:#05080F; --bg-card:#0D1220;
-    --jade:#5BA88A; --gold:#C8A84B; --anima:#C8C0D8;
-    --text-primary:#F5E6C8; --text-secondary:rgba(245,230,200,0.55);
-    --text-muted:rgba(245,230,200,0.3);
-    --border:rgba(200,168,75,0.18);
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg-deep);color:var(--text-primary);font-family:'Crimson Text',serif;padding:120px 56px 80px;max-width:780px;margin:0 auto;}
-  nav{position:fixed;top:0;left:0;right:0;padding:18px 56px;background:rgba(5,8,15,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;z-index:100;}
-  .nav-logo{font-family:'Cinzel',serif;font-size:15px;font-weight:700;letter-spacing:0.12em;text-decoration:none;}
-  .logo-void{color:var(--anima);}
-  .logo-garden{color:var(--jade);}
-  .back{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;}
-  .back:hover{color:var(--gold);}
-  .kicker{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.4em;color:var(--jade);text-transform:uppercase;margin-bottom:12px;}
-  h1{font-family:'Cinzel',serif;font-size:40px;font-weight:700;letter-spacing:0.04em;margin-bottom:8px;color:var(--text-primary);}
-  .updated{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);margin-bottom:56px;letter-spacing:0.06em;}
-  h2{font-family:'Cinzel',serif;font-size:18px;font-weight:600;margin:40px 0 12px;color:var(--gold);letter-spacing:0.04em;}
-  p,li{font-size:16px;color:var(--text-secondary);line-height:1.8;margin-bottom:14px;font-style:italic;}
-  ul{padding-left:20px;margin-bottom:14px;}
-  li{margin-bottom:6px;}
-  a{color:var(--jade);}
-  strong{color:var(--text-primary);font-style:normal;font-weight:600;}
-  .divider{border:none;height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);margin:40px 0;}
-  .app-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
-  .app-item{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-muted);padding:10px 14px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;letter-spacing:0.04em;}
-  .app-item span{color:var(--jade);}
+:root {
+  --bg-deep:     #05080F;
+  --bg-mid:      #0A0E1A;
+  --bg-surface:  #0F1520;
+  --bg-card:     #0D1220;
+  --jade:        #5BA88A;
+  --jade-dim:    rgba(91,168,138,0.12);
+  --gold:        #C8A84B;
+  --gold-bright: #E8C96A;
+  --gold-dim:    rgba(200,168,75,0.15);
+  --gold-border: rgba(200,168,75,0.25);
+  --anima:       #C8C0D8;
+  --text-primary:   #F5E6C8;
+  --text-secondary: rgba(245,230,200,0.55);
+  --text-muted:     rgba(245,230,200,0.3);
+  --border:        rgba(200,168,75,0.18);
+  --border-hover:  rgba(200,168,75,0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'Crimson Text', Georgia, serif;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at top, rgba(91,168,138,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(200,168,75,0.03) 0%, transparent 50%),
+    var(--bg-deep);
+}
+
+/* Nav */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(5,8,15,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+.nav-brand {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.nav-brand .void { color: var(--anima); }
+.nav-brand .garden { color: var(--jade); }
+.nav-links {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-socials {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.nav-socials a {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  display: inline-flex;
+}
+.nav-socials a:hover { color: var(--jade); }
+.nav-socials svg { width: 16px; height: 16px; }
+
+/* Page */
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 80px 32px 120px;
+}
+
+.page-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 36px;
+  margin-bottom: 48px;
+}
+.page-kicker {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+h1 {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 42px;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+  color: var(--text-primary);
+}
+.page-tagline {
+  font-style: italic;
+  color: var(--text-secondary);
+  font-size: 17px;
+}
+
+h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--jade);
+  margin: 48px 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+h3 {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  margin: 28px 0 10px;
+  text-transform: uppercase;
+}
+
+p {
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+ul {
+  margin: 12px 0 20px;
+  padding-left: 22px;
+}
+li {
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+a.inline {
+  color: var(--jade);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(91,168,138,0.3);
+  transition: border-color 0.2s ease;
+}
+a.inline:hover { border-bottom-color: var(--jade); }
+
+.label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.studio-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 26px 28px;
+  margin: 28px 0;
+}
+.studio-card .label { display: block; margin-bottom: 10px; }
+.studio-card p { margin-bottom: 6px; font-size: 15px; }
+.studio-card p:last-child { margin-bottom: 0; }
+
+.game-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 24px 28px;
+  margin: 20px 0 28px;
+}
+.game-list ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  columns: 2;
+  column-gap: 32px;
+}
+.game-list li {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  letter-spacing: 0.04em;
+  break-inside: avoid;
+}
+.game-list li::before {
+  content: "·";
+  color: var(--gold);
+  margin-right: 8px;
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid var(--border);
+  margin-top: 80px;
+  padding: 48px 32px 32px;
+  text-align: center;
+}
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+.footer-mark {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.32em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.footer-tagline {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+.footer-socials {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.footer-socials a {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  display: inline-flex;
+}
+.footer-socials a:hover { color: var(--jade); }
+.footer-socials svg { width: 18px; height: 18px; }
+.footer-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.footer-meta a {
+  color: var(--text-muted);
+  text-decoration: none;
+  margin: 0 10px;
+}
+.footer-meta a:hover { color: var(--gold); }
+
+@media (max-width: 720px) {
+  .nav-inner { padding: 16px 20px; gap: 16px; flex-wrap: wrap; }
+  .nav-links { gap: 18px; font-size: 10px; }
+  main { padding: 56px 22px 80px; }
+  h1 { font-size: 32px; }
+  h2 { font-size: 19px; }
+  .game-list ul { columns: 1; }
+}
 </style>
 </head>
 <body>
+
 <nav>
-  <a href="index.html" class="nav-logo"><span class="logo-void">VOID</span><span class="logo-garden">GARDEN</span></a>
-  <a href="index.html" class="back">← Return</a>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand"><span class="void">Void</span><span class="garden">Garden</span></a>
+    <div class="nav-links">
+      <a href="/">Studio</a>
+      <a href="/games.html">Games</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy.html" class="active">Privacy</a>
+    </div>
+    <div class="nav-socials">
+      <a href="https://www.instagram.com/voidgardengames/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+      </a>
+      <a href="https://www.threads.com/@voidgardengames" target="_blank" rel="noopener" aria-label="Threads">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4.5 0 7.5-2.8 7.5-7.2 0-3.5-2-5.5-4.5-5.8-.5-2.5-2.2-3.6-4.2-3.6-2.5 0-4.3 1.6-4.7 4M8.5 13.5c0-2 1.5-3.3 3.5-3.3 2.6 0 4 1.5 4 4.3 0 2.6-1.5 4-3.7 4-1.7 0-2.8-1-2.8-2.3 0-1.4 1.2-2.2 2.8-2.2 2 0 3.7.8 4.2 3"/></svg>
+      </a>
+      <a href="https://x.com/voidgardengames" target="_blank" rel="noopener" aria-label="X">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+  </div>
 </nav>
 
-<div class="kicker">Legal</div>
-<h1>Privacy Policy</h1>
-<p class="updated">Last updated: May 2026</p>
+<main>
 
-<p>VoidGarden ("we", "us", or "our") is an independent mobile game studio. This Privacy Policy covers all applications developed and published by VoidGarden:</p>
+<header class="page-header">
+  <div class="page-kicker">Legal · Effective May 2026</div>
+  <h1>Privacy Policy</h1>
+  <p class="page-tagline">What we collect, what we don't, and how to reach us.</p>
+</header>
 
-<div class="app-list">
-  <div class="app-item"><span>🌸</span> Shadow Blossom — Void Garden Flyer</div>
-  <div class="app-item"><span>⚡</span> Void Sprint — Shadow Realm Platformer</div>
-  <div class="app-item"><span>🌸</span> Sakura Drop — Jade Temple Descent</div>
-  <div class="app-item"><span>🪐</span> Fling — Void Realm Orbit</div>
-  <div class="app-item"><span>🍄</span> ShroomScan — AI Mushroom Identifier</div>
-</div>
+<p>VoidGarden builds atmospheric mobile games. This policy explains what data our games and website handle. It applies to every app published under the VoidGarden name and to <a class="inline" href="https://voidgarden.com">voidgarden.com</a>.</p>
 
-<hr class="divider">
+<p>Plain language first, legal precision second. If anything here is unclear, write to <a class="inline" href="mailto:hello@voidgarden.com">hello@voidgarden.com</a> and we will rewrite it.</p>
 
-<h2>Information We Collect</h2>
+<h2>The Short Version</h2>
+
 <ul>
-  <li><strong>Usage data</strong> — gameplay statistics, session length, scores, and in-app behaviour to improve performance and experience.</li>
-  <li><strong>Device information</strong> — device type, OS version, and unique identifiers for analytics and crash reporting.</li>
-  <li><strong>Purchase data</strong> — processed securely through Apple's App Store. We do not store payment information.</li>
-  <li><strong>Game progress</strong> — scores, unlocked items, and preferences stored locally on your device.</li>
-  <li><strong>Camera and photo data (ShroomScan only)</strong> — photos are processed by our AI service and not stored after processing.</li>
+  <li>VoidGarden games do <strong>not</strong> ask for your name, email, address, phone number, or any account login.</li>
+  <li>Games store gameplay data (high scores, coin balances, unlocked skins, settings) on your device only. We never see it.</li>
+  <li>Ads inside the games are served by Google AdMob, which uses standard ad identifiers.</li>
+  <li>In-app purchases are handled by Apple and (where used) by RevenueCat. Apple is the payment processor — VoidGarden never sees your card.</li>
+  <li>The website does not run analytics, tracking pixels, or cross-site cookies.</li>
 </ul>
 
-<h2>Advertising</h2>
-<p>Our free apps display advertisements served by Google AdMob. You can opt out of personalised advertising in your device Settings under <strong>Privacy & Security → Tracking</strong>. All apps offer a Remove Ads purchase ($1.99) to permanently disable advertising.</p>
-<p><a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy ↗</a></p>
+<h2>What the Games Collect</h2>
 
-<h2>In-App Purchases</h2>
-<p>Our apps offer optional purchases including coin packs, cosmetic skins, and ad removal. All purchases are processed through Apple's App Store. We do not store payment information.</p>
-<ul>
-  <li>Consumable purchases (coin packs) cannot be restored</li>
-  <li>Non-consumable purchases (skins, remove ads) can be restored via Restore Purchases in-app</li>
-</ul>
+<h3>On-device only</h3>
+<p>Each game stores progress data in iOS UserDefaults on your device: high scores, coin balances, unlocked skins, sound and haptics preferences, ad-removal status. This data never leaves the device. Delete the app and it is gone.</p>
 
-<h2>Third-Party Services</h2>
-<ul>
-  <li><strong>RevenueCat</strong> — purchase management. <a href="https://www.revenuecat.com/privacy" target="_blank">Privacy Policy ↗</a></li>
-  <li><strong>Google AdMob</strong> — in-app advertising. <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy ↗</a></li>
-  <li><strong>OpenAI</strong> — AI image analysis (ShroomScan only). <a href="https://openai.com/privacy" target="_blank">Privacy Policy ↗</a></li>
-  <li><strong>Apple Game Center</strong> — leaderboards and achievements.</li>
-</ul>
+<h3>Through Apple</h3>
+<p>When you make an in-app purchase, Apple handles the transaction through StoreKit. Apple shares with us only what is needed to verify the purchase: a receipt and product identifier. We do not receive your name, email, or payment details. See Apple's privacy policy for how Apple handles your account.</p>
 
-<h2>Data Storage</h2>
-<p>Most data is stored locally on your device. We do not operate servers storing personal user data beyond purchase verification via RevenueCat. Deleting the app removes all local data.</p>
+<h3>Through RevenueCat</h3>
+<p>Some games use RevenueCat to manage subscription and purchase state. RevenueCat receives an anonymized identifier and your StoreKit receipt. It does not receive personal information. RevenueCat's privacy policy is at <a class="inline" href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener">revenuecat.com/privacy</a>.</p>
+
+<h3>Through AdMob</h3>
+<p>Games show ads via Google AdMob. AdMob may use a device advertising identifier, approximate location derived from IP, and standard ad-serving data. You can reset or limit this identifier in iOS Settings → Privacy &amp; Security → Tracking, and in Settings → Privacy &amp; Security → Apple Advertising. Google's policy is at <a class="inline" href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
+
+<h3>App Tracking Transparency</h3>
+<p>On first launch, each game requests the iOS ATT prompt. Decline and personalized ads turn off — you will still see ads, but contextual ones. Accept and ads may be personalized. Either choice is fully respected.</p>
+
+<h2>What the Website Collects</h2>
+
+<p>The site at voidgarden.com is hosted on GitHub Pages behind Cloudflare. It runs no analytics scripts, no marketing pixels, no third-party trackers. Standard server logs (IP address, request, timestamp) are kept by GitHub and Cloudflare per their policies — VoidGarden does not access or use them.</p>
 
 <h2>Children's Privacy</h2>
-<p>Our apps are not directed at children under 13. Contact us at <a href="mailto:hello@voidgarden.com">hello@voidgarden.com</a> if you believe this has occurred.</p>
 
-<h2>Your Rights (GDPR)</h2>
-<p>If you are in the EEA, you have rights to access, rectify, erase, object to, and port your personal data. Most data can be deleted by uninstalling the app.</p>
+<p>VoidGarden games are rated for general audiences. No game collects information knowingly from children. Games do not include sign-up forms, chat, or any personal-information entry field. If you believe a child has somehow been harmed by a VoidGarden game, contact us immediately at <a class="inline" href="mailto:hello@voidgarden.com">hello@voidgarden.com</a>.</p>
 
-<h2>Changes</h2>
-<p>We may update this policy as we add new apps. Continued use constitutes acceptance of the updated policy.</p>
+<h2>Your Rights</h2>
+
+<p>Because we don't hold personal data in any server we control, most data-rights requests don't apply. If you have purchased something through one of our games and want a record of the transaction, Apple is the seller of record and will help with refunds, receipts, and purchase history through the App Store. For anything we can clarify or correct, write to <a class="inline" href="mailto:hello@voidgarden.com">hello@voidgarden.com</a> and we will respond.</p>
+
+<h2>Apps Covered by This Policy</h2>
+
+<p>This policy applies to every VoidGarden app, published or in development:</p>
+
+<div class="game-list">
+<ul>
+  <li>Void Sprint</li>
+  <li>Sakura Drop</li>
+  <li>Fling — Orbit &amp; Drift</li>
+  <li>Shadow Blossom</li>
+  <li>Shadow Road</li>
+  <li>Mist Walker</li>
+  <li>Void Stack</li>
+  <li>Lantern Line</li>
+  <li>Merge Bloom</li>
+  <li>Dawn Sequence</li>
+  <li>The Garden</li>
+  <li>VoidQuest</li>
+  <li>Hollowpetal</li>
+</ul>
+</div>
+
+<h2>Changes to This Policy</h2>
+
+<p>If this policy changes, the date at the top will update and the change will be noted in the relevant section. Material changes will be announced in-app on the next launch where reasonably possible.</p>
+
+<h2>Studio Information</h2>
+
+<div class="studio-card">
+  <span class="label">Publisher</span>
+  <p><strong>VoidGarden Studio</strong></p>
+  <p>Independent mobile game studio</p>
+  <p><a class="inline" href="mailto:hello@voidgarden.com">hello@voidgarden.com</a></p>
+</div>
 
 <h2>Contact</h2>
-<p><a href="mailto:hello@voidgarden.com">hello@voidgarden.com</a> — <a href="https://voidgarden.com">voidgarden.com</a></p>
 
-<hr class="divider">
-<p style="font-family:'Space Mono',monospace;font-size:10px;font-style:normal;letter-spacing:0.06em;">© 2026 VoidGarden. All rights reserved.</p>
+<p>General: <a class="inline" href="mailto:hello@voidgarden.com">hello@voidgarden.com</a><br>
+Support &amp; bug reports: <a class="inline" href="mailto:support@voidgarden.com">support@voidgarden.com</a><br>
+Press &amp; partnerships: <a class="inline" href="mailto:press@voidgarden.com">press@voidgarden.com</a></p>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-mark">A VoidGarden Studio</div>
+    <div class="footer-tagline"><em>where the garden meets the void.</em></div>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/voidgardengames/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+      </a>
+      <a href="https://www.threads.com/@voidgardengames" target="_blank" rel="noopener" aria-label="Threads">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4.5 0 7.5-2.8 7.5-7.2 0-3.5-2-5.5-4.5-5.8-.5-2.5-2.2-3.6-4.2-3.6-2.5 0-4.3 1.6-4.7 4M8.5 13.5c0-2 1.5-3.3 3.5-3.3 2.6 0 4 1.5 4 4.3 0 2.6-1.5 4-3.7 4-1.7 0-2.8-1-2.8-2.3 0-1.4 1.2-2.2 2.8-2.2 2 0 3.7.8 4.2 3"/></svg>
+      </a>
+      <a href="https://x.com/voidgardengames" target="_blank" rel="noopener" aria-label="X">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <div class="footer-meta">
+      <a href="/privacy.html">Privacy</a>·<a href="/contact.html">Contact</a>·<a href="mailto:hello@voidgarden.com">hello@voidgarden.com</a>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
